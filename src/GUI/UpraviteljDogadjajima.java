@@ -42,11 +42,17 @@ public class UpraviteljDogadjajima extends Application {
         Scene scene1 = new Scene(new Group());
         stage1.setTitle("Dodavanje dogadjaja");
         stage1.setWidth(800);
-        stage1.setHeight(600);
+        stage1.setHeight(250);
+        Stage stage2 = new Stage();
+        Scene scene2 = new Scene(new Group());
+        stage2.setTitle("Odaberite pod kojim rednim brojem ce se fest obrisati");
+        stage2.setWidth(800);
+        stage2.setHeight(200);
         final Label label = new Label("Tabela svih dogadjaja");
         label.setFont(new Font("Arial", 20));
         final HBox hb = new HBox();
         final HBox hb1 = new HBox();
+        final HBox hb2 = new HBox();
         table.setEditable(true);
  //naziv, datum i vrijeme održavanja (početak i kraj), opis, organizatora i učesnike
         TableColumn nameCol = new TableColumn("Naziv");
@@ -100,13 +106,46 @@ public class UpraviteljDogadjajima extends Application {
         final TextField addActors= new TextField();		
         addActors.setPromptText("Ucesnici");		
         addActors.setMaxWidth(nameCol.getPrefWidth());
- 		
+        
+ 	final TextField removeFest= new TextField();		
+        removeFest.setPromptText("Redni broj");		
+        removeFest.setMaxWidth(nameCol.getPrefWidth());
+        
+        
         final Button addButton = new Button("Add");		
         addButton.setOnAction(new EventHandler<ActionEvent>() {		
             @Override		
             public void handle(ActionEvent e) {
                 stage1.setScene(scene1);
                 stage1.show();
+                
+            }		
+        });
+        
+         final Button removeButton = new Button("Remove");		
+        removeButton.setOnAction(new EventHandler<ActionEvent>() {		
+            @Override		
+            public void handle(ActionEvent e) {
+                stage2.setScene(scene2);
+                stage2.show();
+                
+            }		
+        });
+        
+        final Button okButton = new Button("Remove");		
+        okButton.setOnAction(new EventHandler<ActionEvent>() {		
+            @Override		
+            public void handle(ActionEvent e) {
+                data.remove(Integer.parseInt(removeFest.getText())-1);
+                removeFest.clear();
+                stage2.close();
+            }		
+        });
+        
+        final Button addButton2 = new Button("Add");		
+        addButton2.setOnAction(new EventHandler<ActionEvent>() {		
+            @Override		
+            public void handle(ActionEvent e) {
                 data.add(new Dogadjaji(		
                         addName.getText(),		
                         addStartTime.getText(),		
@@ -120,22 +159,33 @@ public class UpraviteljDogadjajima extends Application {
                 addDescribe.clear();
                 addOrganizator.clear();
                 addActors.clear();
+                stage1.close();
             }		
         });		
  		
-        hb.getChildren().addAll(addName, addStartTime, addEndTime, addDescribe, addOrganizator, addActors);		
+        hb.getChildren().addAll(addName, addStartTime, addEndTime, addDescribe, addOrganizator, addActors,addButton2);		
         hb.setSpacing(3);
-        hb1.getChildren().addAll(addButton);		
+        hb1.getChildren().addAll(addButton,removeButton);		
         hb1.setSpacing(3);
+        hb2.getChildren().addAll(removeFest,okButton);		
+        hb2.setSpacing(3);
         
         final VBox vbox = new VBox();
         vbox.setSpacing(10);
         vbox.setPadding(new Insets(15, 0, 0, 15));
         vbox.getChildren().addAll(label, table,hb1);
+        
         final VBox vbox1 = new VBox();
         vbox1.setSpacing(10);
         vbox1.setPadding(new Insets(15, 0, 0, 15));
         vbox1.getChildren().addAll(hb);
+        
+        final VBox vbox2 = new VBox();
+        vbox2.setSpacing(10);
+        vbox2.setPadding(new Insets(15, 0, 0, 15));
+        vbox2.getChildren().addAll(hb2);
+        
+        ((Group) scene2.getRoot()).getChildren().addAll(vbox2);
         ((Group) scene1.getRoot()).getChildren().addAll(vbox1);
         ((Group) scene.getRoot()).getChildren().addAll(vbox);
  
